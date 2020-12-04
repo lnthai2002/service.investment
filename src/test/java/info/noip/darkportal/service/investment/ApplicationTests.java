@@ -1,4 +1,4 @@
-package info.noip.darkportal.service.invesment;
+package info.noip.darkportal.service.investment;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
