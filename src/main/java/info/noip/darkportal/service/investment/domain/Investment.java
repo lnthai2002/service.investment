@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -23,6 +24,7 @@ import java.util.UUID;
 public class Investment {
     @Id
     @GeneratedValue
+    @Type(type="org.hibernate.type.UUIDCharType")
     private UUID investmentId;
     private Long principalCents;
     private Long monthlyDepCents;
