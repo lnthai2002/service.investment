@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 public class InvestmentConverter {
     public InvestmentResponseDTO fromDomain(Investment model) {
         InvestmentResponseDTO dto = new InvestmentResponseDTO();
-        dto.setInvestmentId(model.getInvestmentId().toString());
         dto.setMonths(model.getMonths());
         dto.setMonthlyDepCents(model.getMonthlyDepCents());
         dto.setRate(model.getRate());

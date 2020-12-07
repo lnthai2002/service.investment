@@ -12,10 +12,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class InvestmentControllerTest extends AbstractControllerTest {
 
@@ -48,5 +47,27 @@ class InvestmentControllerTest extends AbstractControllerTest {
         mvc.perform(get("/v1/investments/" + id.toString()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.investmentId").value(id.toString()));
+    }
+
+    @Test
+    void should_be_able_to_return_an_investment_without_saving_it() throws Exception {
+        //given some investment info
+        Long principal = 20000L;
+        Long monthlyDep = 1000L;
+        BigDecimal rate = new BigDecimal("0.07");
+        Integer months = 60;
+        //act and validate that we received a location header and that there is no call to investment service
+        mvc.perform(get("/v1/investments/try?"
+                + "&principalCents=" + principal
+                + "&monthlyDepCents=" + monthlyDep
+                + "&rate=" + new BigDecimal("0.07")
+                + "&months=" + 60)
+                )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.principalCents").value(principal))
+                .andExpect(jsonPath("$.monthlyDepCents").value(monthlyDep))
+                .andExpect(jsonPath("$.rate").value(rate))
+                .andExpect(jsonPath("$.months").value(months));
+        verify(investmentService, times(0)).save(any());
     }
 }

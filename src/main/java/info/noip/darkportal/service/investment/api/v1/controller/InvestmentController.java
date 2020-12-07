@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 //TODO: create controller advice to handle exception
@@ -26,6 +27,25 @@ public class InvestmentController {
     @GetMapping("/{id}")
     public ResponseEntity<InvestmentResponseDTO> loadInvestment(@PathVariable UUID id) {
         Investment investment = investmentService.get(id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(investmentConverter.fromDomain(investment));
+    }
+
+    /**
+     * This is to simulate an investment, not storing it
+     * */
+    @GetMapping("/try")
+    public ResponseEntity<InvestmentResponseDTO> tryInvestment(@RequestParam Long principalCents,
+                                                               @RequestParam Long monthlyDepCents,
+                                                               @RequestParam BigDecimal rate,
+                                                               @RequestParam Integer months) {
+        Investment investment = Investment.builder()
+                .principalCents(principalCents)
+                .monthlyDepCents(monthlyDepCents)
+                .rate(rate)
+                .months(months)
+                .build();
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(investmentConverter.fromDomain(investment));
