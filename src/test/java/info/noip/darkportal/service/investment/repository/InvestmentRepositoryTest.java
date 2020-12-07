@@ -19,15 +19,16 @@ class InvestmentRepositoryTest {
     @Test
     void should_save_successfully() {
         //given a new investment
-        Investment investment = new Investment()
+        Investment investment = Investment.builder()
                 .principalCents(1000000L)
                 .monthlyDepCents(10000L)
                 .rate(new BigDecimal("0.07"))
-                .months(12);
+                .months(12)
+                .build();
         //act
         investmentRepository.save(investment);
         //validate
-        assertNotNull(investmentRepository.findById(investment.investmentId())
+        assertNotNull(investmentRepository.findById(investment.getInvestmentId())
                 .orElseThrow(() -> new EntityNotFoundException()));
     }
 }

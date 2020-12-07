@@ -22,12 +22,13 @@ class InvestmentConverterTest {
     @Test
     void should_be_able_to_convert_investment_to_response_dto() {
         //given a domain object
-        Investment investment = new Investment()
+        Investment investment = Investment.builder()
                 .principalCents(1000L)
                 .monthlyDepCents(200L)
                 .rate(new BigDecimal("0.07"))
                 .months(120)
-                .investmentId(UUID.randomUUID());
+                .investmentId(UUID.randomUUID())
+                .build();
         //act
         InvestmentResponseDTO dto = investmentConverter.fromDomain(investment);
         //validate
