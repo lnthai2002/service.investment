@@ -2,10 +2,13 @@ package info.noip.darkportal.service.investment.domain;
 
 import lombok.*;
 import org.hibernate.annotations.Type;
+import org.javamoney.moneta.Money;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -32,13 +35,29 @@ public class Investment {
     private BigDecimal rate;
     @NonNull
     private Integer months;
+    //This is calculated field
+    private BigDecimal futureValue;
 
     @CreatedDate
     private Long createdAt;
     @LastModifiedDate
     private Long updatedAt;
 
+    private BigDecimal calculateFutureValue(Long principalCents, Long monthlyDepCents, BigDecimal rate, Integer months) {
+        CurrencyUnit cad = Monetary.getCurrency("CAD");
+        Money principal = Money.ofMinor(cad, principalCents);
+        Money yearlyDep = Money.ofMinor(cad,monthlyDepCents * 12);
+        //principal * (1+rate)^year
+        Money futureValueOfPrincipal = principal.multiply(rate.add(new BigDecimal("1")).pow(months/12));
+        //yearlyDep * ((1+rate)^year -1) / rate
+        Money futureValueOfMonthlyDep = yearlyDep
+                .multiply(
+                        (BigDecimal.ONE.add(rate).pow(months/12)).subtract(BigDecimal.ONE)
+                )
+                .divide(rate);
 
+        return futureValueOfPrincipal.add(futureValueOfMonthlyDep).getNumberStripped();
+    }
 
     /**
      * Lombok will not generate the builder() method when it see this
@@ -58,6 +77,10 @@ public class Investment {
         @Override
         public Investment build() {
             Investment investment = super.build();
+            if (investment.futureValue == null) {
+                investment.futureValue = investment.calculateFutureValue(investment.principalCents,
+                        investment.monthlyDepCents, investment.rate, investment.months);
+            }
             return investment;
         }
 
