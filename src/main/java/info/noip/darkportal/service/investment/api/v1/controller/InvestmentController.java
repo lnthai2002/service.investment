@@ -24,7 +24,7 @@ public class InvestmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InvestmentResponseDTO> getInvestment(@PathVariable UUID id) {
+    public ResponseEntity<InvestmentResponseDTO> loadInvestment(@PathVariable UUID id) {
         Investment investment = investmentService.get(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
