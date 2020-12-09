@@ -3,6 +3,7 @@ package info.noip.darkportal.service.investment.domain;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import org.javamoney.moneta.Money;
+import org.javamoney.moneta.function.MonetaryQueries;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -36,14 +37,14 @@ public class Investment {
     @NonNull
     private Integer months;
     //This is calculated field
-    private BigDecimal futureValue;
+    private Long futureValueCents;
 
     @CreatedDate
     private Long createdAt;
     @LastModifiedDate
     private Long updatedAt;
 
-    private BigDecimal calculateFutureValue(Long principalCents, Long monthlyDepCents, BigDecimal rate, Integer months) {
+    private Long calculateFutureValue(Long principalCents, Long monthlyDepCents, BigDecimal rate, Integer months) {
         CurrencyUnit cad = Monetary.getCurrency("CAD");
         Money principal = Money.ofMinor(cad, principalCents);
         Money yearlyDep = Money.ofMinor(cad,monthlyDepCents * 12);
@@ -56,7 +57,10 @@ public class Investment {
                 )
                 .divide(rate);
 
-        return futureValueOfPrincipal.add(futureValueOfMonthlyDep).getNumberStripped();
+        Money total = futureValueOfPrincipal.add(futureValueOfMonthlyDep)   //sum of principal and accumulated deposit
+                .with(Monetary.getDefaultRounding()) ;                      //round up due to operation with real number
+
+        return total.query(MonetaryQueries.convertMinorPart());             //return in cents
     }
 
     /**
@@ -77,8 +81,8 @@ public class Investment {
         @Override
         public Investment build() {
             Investment investment = super.build();
-            if (investment.futureValue == null) {
-                investment.futureValue = investment.calculateFutureValue(investment.principalCents,
+            if (investment.futureValueCents == null) {
+                investment.futureValueCents = investment.calculateFutureValue(investment.principalCents,
                         investment.monthlyDepCents, investment.rate, investment.months);
             }
             return investment;

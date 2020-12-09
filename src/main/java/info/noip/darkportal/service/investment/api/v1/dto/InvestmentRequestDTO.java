@@ -15,5 +15,5 @@ public class InvestmentRequestDTO implements Serializable {
     private Long monthlyDepCents;
     private BigDecimal rate;
     private Integer months;
-    private BigDecimal futureValue;
+    private Long futureValueCents;
 }

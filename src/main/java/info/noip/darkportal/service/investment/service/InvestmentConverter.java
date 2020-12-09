@@ -30,7 +30,7 @@ public class InvestmentConverter {
                 .monthlyDepCents(request.getMonthlyDepCents())
                 .rate(request.getRate())
                 .months(request.getMonths())
-                .futureValue(request.getFutureValue())
+                .futureValueCents(request.getFutureValueCents())
                 .build();
         return investment;
     }
