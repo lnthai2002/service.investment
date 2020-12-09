@@ -21,7 +21,7 @@ public class InvestmentConverter {
         dto.setInvestmentId(
                 Optional.ofNullable(model.getInvestmentId())
                         .map(u -> u.toString())
-                        .orElse(""));
+                        .orElse(null));
         return dto;
     }
 
