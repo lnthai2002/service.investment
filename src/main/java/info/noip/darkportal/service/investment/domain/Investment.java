@@ -18,8 +18,10 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-@Builder
+@EntityListeners(AuditingEntityListener.class)      //to auto populate createdAt and updatedAt
+@NoArgsConstructor(access = AccessLevel.PROTECTED)  //to be used by JPA only
+@Builder                                            //to be used by business logic
+@AllArgsConstructor(access = AccessLevel.PRIVATE)   //tell lombok to generate the builder pattern with private all arg constructor (see https://github.com/rzwitserloot/lombok/issues/1389)
 @Getter
 public class Investment {
     @Id
