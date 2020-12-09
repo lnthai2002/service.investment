@@ -22,16 +22,26 @@ class InvestmentConverterTest {
     @Test
     void should_be_able_to_convert_investment_to_response_dto() {
         //given a domain object
+        final Long principalCents = 1000L;
+        final long monthlyDepCents = 200L;
+        final BigDecimal rate = new BigDecimal("0.07");
+        final int months = 120;
+        final UUID investmentId = UUID.randomUUID();
         Investment investment = Investment.builder()
-                .principalCents(1000L)
-                .monthlyDepCents(200L)
-                .rate(new BigDecimal("0.07"))
-                .months(120)
-                .investmentId(UUID.randomUUID())
+                .principalCents(principalCents)
+                .monthlyDepCents(monthlyDepCents)
+                .rate(rate)
+                .months(months)
+                .investmentId(investmentId)
                 .build();
         //act
         InvestmentResponseDTO dto = investmentConverter.fromDomain(investment);
         //validate
-        assertNotNull(dto.getInvestmentId());
+        assertNotNull(dto);
+        assertEquals(principalCents, dto.getPrincipalCents());
+        assertEquals(monthlyDepCents, dto.getMonthlyDepCents());
+        assertEquals(rate, dto.getRate());
+        assertEquals(months, dto.getMonths());
+        assertEquals(investmentId.toString(), dto.getInvestmentId());
     }
 }

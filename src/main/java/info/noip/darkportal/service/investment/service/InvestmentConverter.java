@@ -5,6 +5,8 @@ import info.noip.darkportal.service.investment.api.v1.dto.InvestmentResponseDTO;
 import info.noip.darkportal.service.investment.domain.Investment;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class InvestmentConverter {
     public InvestmentResponseDTO fromDomain(Investment model) {
@@ -15,6 +17,10 @@ public class InvestmentConverter {
         dto.setPrincipalCents(model.getPrincipalCents());
         dto.setCreatedAt(model.getCreatedAt());
         dto.setUpdatedAt(model.getUpdatedAt());
+        dto.setInvestmentId(
+                Optional.ofNullable(model.getInvestmentId())
+                        .map(u -> u.toString())
+                        .orElse(""));
         return dto;
     }
 
