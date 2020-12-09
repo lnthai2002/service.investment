@@ -15,6 +15,7 @@ public class InvestmentConverter {
         dto.setMonthlyDepCents(model.getMonthlyDepCents());
         dto.setRate(model.getRate());
         dto.setPrincipalCents(model.getPrincipalCents());
+        dto.setFutureValueCents(model.getFutureValueCents());
         dto.setCreatedAt(model.getCreatedAt());
         dto.setUpdatedAt(model.getUpdatedAt());
         dto.setInvestmentId(

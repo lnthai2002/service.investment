@@ -16,6 +16,7 @@ public class InvestmentResponseDTO implements Serializable {
     private Long monthlyDepCents;
     private BigDecimal rate;
     private Integer months;
+    private Long futureValueCents;
     private Long createdAt;
     private Long updatedAt;
 }
